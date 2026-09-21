@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>IELTS Listening Practice</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#1b4b8f"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#eef1f5;--fg:#14202b;--card:#fff;--ac:#1b4b8f;--mu:#5c6b7a;--bd:#c9d2dc;--ok:#1e7a3c;--no:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme=light]){}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#10171f;--fg:#e6ecf2;--card:#1a232d;--ac:#6ea2ee;--mu:#93a1b0;--bd:#33414f}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg)}
+.w{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;margin:0}h2{margin:.4em 0}h3,h4{margin:1em 0 .3em}
+button{font:inherit;padding:10px 16px;border-radius:8px;border:0;background:var(--ac);color:var(--bg);cursor:pointer}
+button:disabled{opacity:.4}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:14px}
+.c{background:var(--card);color:var(--fg);border:1px dashed var(--bd);border-radius:8px;padding:14px;display:flex;flex-direction:column;text-align:left;opacity:.55}
+.c small{color:var(--mu)}
+.c.on{opacity:1;border:2px solid var(--ac)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);display:flex;justify-content:space-between;gap:8px;padding:10px 16px;background:var(--ac);color:var(--bg);z-index:2;font-weight:600}
+.q{margin:16px 0}
+.pn{display:flex;justify-content:space-between;margin-top:24px}
+.chip{display:inline-block;margin:3px;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);cursor:pointer;user-select:none}
+.chip.sel{outline:3px solid var(--ac)}.chip.used{opacity:.4}
+.slot{display:inline-block;min-width:56px;text-align:center;margin-left:8px;padding:6px 10px;border:2px dashed var(--ac);border-radius:8px;cursor:pointer}
+input:not([type]){font:inherit;padding:8px;width:11em;max-width:100%;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--fg)}
+label{display:block;padding:10px;border:1px solid var(--bd);border-radius:8px;margin:6px 0;background:var(--card)}
+#nav,#ft{display:flex;flex-wrap:wrap;gap:4px;padding:8px 16px;max-width:760px;margin:0 auto}
+#nav i{font-style:normal;width:32px;height:32px;line-height:30px;text-align:center;border:1px solid var(--bd);border-radius:6px;font-size:13px;background:var(--card)}
+#nav i.a{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+.rv{border-left:5px solid var(--bd);padding:8px 12px;margin:10px 0;background:var(--card)}
+.rv.ok{border-color:var(--ok)}.rv.no{border-color:var(--no)}.rv.pt{border-color:#c98a00}
+.rv p{margin:.4em 0 0;color:var(--mu)}
+select{font:inherit;padding:8px;margin:8px 0}
+</style></head><body><div id="app"></div>
+<script>
+/* ===== STATE (schema) =====
+ T[n] = {parts:[{g:[{h,i,k:'g'|'c'|'m', it:[{n,t,o?,a:[..],x}]}]}]}  k: g=gap, c=single choice, m=choose two
+ localStorage: ielts = running exam {n,st,sch,ans,left}; r<n> = finished result {ans,left,tot}
+ IndexedDB ielts/a: key t<n>p<p> = audio Blob. Repo fallback: audio/tNN_pN.mp3 */
+const T={1:{parts:[
+{g:[
+{h:"Self-drive tours in the USA (Q1–6)",i:"Complete the notes. Write ONE WORD for each answer.",k:'g',ex:"Name: Andrea <u>Brown</u>",it:[
+{n:1,t:"Address: 24 __ Road",a:["ardleigh"],x:"Spelled out letter by letter (A-R-D-L-E-I-G-H). Write exactly what is spelled."},
+{n:2,t:"Heard about company from: __",a:["newspaper"],x:"Agent offers 'friend' and 'advert'. Caller says she read about them in the newspaper."},
+{n:3,t:"Los Angeles: customer wants to visit some __ parks with her children",a:["theme"],x:"'plenty of time to visit some of the theme parks'. The gap needs a word before 'parks'."},
+{n:4,t:"Yosemite Park: customer wants to stay in a lodge, not a __",a:["tent"],x:"'campsite' is said first, but the caller's own word is 'tent'. Wait for the caller."},
+{n:5,t:"Trip Two: customer wants to see the __ on the way to Cambria",a:["castle"],x:"The caller says 'a really nice castle' before the agent names Hearst Castle."},
+{n:6,t:"At San Diego, wants to spend time on the __",a:["beach","beaches"],x:"'That's good for beaches isn't it?' The zoo is offered, then rejected."}]},
+{h:"Trip table (Q7–10)",i:"Complete the table. Write ONE WORD AND/OR A NUMBER for each answer.",k:'g',it:[
+{n:7,t:"Trip One, total distance: __ km",a:["2020"],x:"Total is 2,020 km. 206 and 632 are the shortest and longest legs, not the total."},
+{n:8,t:"Trip One includes accommodation, car, one __",a:["flight"],x:"'accommodation, car rental and a flight but no meals'."},
+{n:9,t:"Trip Two, price per person: £ __",a:["429"],x:"'almost a hundred pounds cheaper' is only a hint. Wait for the exact figure, £429."},
+{n:10,t:"Trip Two includes accommodation, car, __",a:["dinner"],x:"Flights are not included, then: 'these hotels offer dinner in the price'."}]}]},
+{g:[
+{h:"Leisure club facilities (Q11–12)",i:"Choose TWO letters, A–E.",k:'m',it:[
+{n:11,t:"Which TWO facilities at the leisure club have recently been improved?",o:["the gym","the tracks","the indoor pool","the outdoor pool","the sports training for children"],a:["A","C"],x:"A: 'recently refurbished fitness suite'. C: pool 'expanded to eight lanes'. D is out: no space for an outdoor pool. E: tuition 'continues', so it is not new. B is never mentioned."}]},
+{h:"Joining the leisure club (Q13–20)",i:"Complete the notes. Write NO MORE THAN TWO WORDS for each answer.",k:'g',it:[
+{n:13,t:"New members should describe any __.",a:["health problems","health problem"],x:"'giving details of any health problems' on the day-one questionnaire."},
+{n:14,t:"The __ will be explained to you before you use the equipment.",a:["safety rules","safety rule"],x:"'take you through the safety rules for using the equipment'."},
+{n:15,t:"You will be given a six-week __.",a:["plan"],x:"'draw up a plan ... within a six-week period'. 'six-week' is already printed."},
+{n:16,t:"There is a compulsory £90 __ fee for members.",a:["joining"],x:"'All members must pay a joining fee of £90'. Monthly fees are a separate cost."},
+{n:17,t:"Gold members are given __ to all the LP clubs.",a:["free entry"],x:"'Gold membership entitles you to free entry at all LP Clubs'."},
+{n:18,t:"Premier members are given priority during __ hours.",a:["peak"],x:"'booking preferences to Premier members at peak times'. 'hours' is already printed."},
+{n:19,t:"Premier members can bring some __ every month.",a:["guests"],x:"'passes for guests every month'. The gap needs the noun 'guests', not 'passes'."},
+{n:20,t:"Members should always take their __ with them.",a:["photo card","photo cards","photocard"],x:"'very important to remember your photo card'. Clothes and equipment are not needed."}]}]},
+{g:[
+{h:"Global Design Competition (Q21–25)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:21,t:"Students entering the design competition have to",o:["produce an energy-efficient design.","adapt an existing energy-saving appliance.","develop a new use for current technology."],a:["C"],x:"'a new design for a typical domestic kitchen appliance' is general. The answer: 'innovative approach to existing technology'. Energy saving was last year's focus."},
+{n:22,t:"John chose a dishwasher because he wanted to make dishwashers",o:["more appealing.","more common.","more economical."],a:["A"],x:"'some people will be prepared to pay a little extra for something that looks different'."},
+{n:23,t:"The stone in John's 'Rockpool' design is used",o:["for decoration.","to switch it on.","to stop water escaping."],a:["B"],x:"'Instead of pushing a button, you turn the stone'. The professor's 'decoration' is corrected."},
+{n:24,t:"In the holding chamber, the carbon dioxide",o:["changes back to a gas.","dries the dishes.","is allowed to cool."],a:["A"],x:"'the liquid is depressurised and so it reverts to a gas'."},
+{n:25,t:"At the end of the cleaning process, the carbon dioxide",o:["is released into the air.","is disposed of with the waste.","is collected ready to be re-used."],a:["C"],x:"'sent back to the cylinder and can be used again and again'. The professor's 'not wasted, I hope' invites A or B."}]},
+{h:"John's needs (Q26–30)",i:"Complete the notes. Write ONE WORD ONLY for each answer.",k:'g',it:[
+{n:26,t:"John needs help preparing for his __.",a:["presentation"],x:"'I have to give a presentation, and that's the part I was hoping you could help me with'. Drawings and paper are already done."},
+{n:27,t:"The professor advises John to make a __ of his design.",a:["model"],x:"'you really need a model of the machine'."},
+{n:28,t:"John's main problem is getting good quality __.",a:["material","materials"],x:"Main difficulty: materials. 'everything that's top quality is also very expensive'."},
+{n:29,t:"The professor suggests John apply for a __.",a:["grant"],x:"'why don't you talk to the university about a grant?' Not 'application forms'."},
+{n:30,t:"The professor will check the __ information in John's written report.",a:["technical"],x:"'make sure the technical details you've given are accurate and thorough'."}]}]},
+{g:[{h:"The spirit bear (Q31–40)",i:"Complete the notes. Write ONE WORD ONLY for each answer.",k:'g',it:[
+{n:31,t:"Its colour comes from an uncommon __.",a:["gene"],x:"'born with a white coat, which is the result of a special gene'."},
+{n:32,t:"Local people believe that it has unusual __.",a:["power","powers"],x:"'its snowy fur brings with it a special power'. Singular or plural accepted."},
+{n:33,t:"They protect the bear from __.",a:["strangers"],x:"'their way of protecting it when strangers visit the area'."},
+{n:34,t:"Tree roots stop __ along salmon streams.",a:["erosion"],x:"'roots that help prevent erosion of the soil along the banks'."},
+{n:35,t:"It is currently found on a small number of __.",a:["islands"],x:"'lives off the coast ... on a few islands'."},
+{n:36,t:"Habitat is being lost due to deforestation and construction of __ by logging companies.",a:["roads"],x:"'they have built roads which have fractured the areas where the bear usually feeds'."},
+{n:37,t:"Unrestricted __ is affecting the salmon supply.",a:["fishing"],x:"'no legal limit on fishing'. Salmon numbers fall because of it."},
+{n:38,t:"The bears' existence is also threatened by their low rate of __.",a:["reproduction"],x:"'reproduction among these bears has always been disappointingly low'."},
+{n:39,t:"Logging companies must improve their __ of logging.",a:["method","methods"],x:"'requiring logging companies to adopt a better logging method'."},
+{n:40,t:"Maintenance and __ of the spirit bears' territory is needed.",a:["expansion"],x:"'more emphasis on its expansion'. 'Maintenance' is already printed."}]}]}
+]},
+2:{parts:[
+{g:[{h:"Transport Survey (Q1–10)",i:"Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.",k:'g',ex:"Travelled to town today: by <u>bus</u>",it:[
+{n:1,t:"Name: Luisa __",a:["hardie"],x:"Spelled out: H-A-R-D-I-E."},
+{n:2,t:"Address: __ White Stone Rd",a:["19"],x:"'It's 19, White Stone Road.' Write the number only."},
+{n:3,t:"Postcode: __",a:["gt8 2lc","gt82lc"],x:"The interviewer says GT7 and she corrects it: G-T-8, 2-L-C. Take the corrected version."},
+{n:4,t:"Occupation: __",a:["hairdresser"],x:"The interviewer suggests 'student'. She says she has finished training: 'I'm a hairdresser'."},
+{n:5,t:"Reason for visit to town: to go to the __",a:["dentist","dentist's","dentists"],x:"'not for shopping today ... but to see the dentist'. Shopping is the rejected usual reason."},
+{n:6,t:"Suggestions for improvement: better __",a:["lighting"],x:"'the lighting should be better'. Footpaths come next but already have a printed answer."},
+{n:7,t:"more frequent __",a:["trains"],x:"'I don't think there are enough trains'. Wait time is the reason; the gap needs the plural noun."},
+{n:8,t:"Cycling to work: having __ parking places for bicycles",a:["safe"],x:"'there are no safe places to leave your bikes'. The gap before 'parking places' needs an adjective."},
+{n:9,t:"being able to use a __ at work",a:["shower"],x:"'I think I'd need a shower somewhere at work'. Uphill and sweaty are only the reasons."},
+{n:10,t:"the opportunity to have cycling __ on busy roads",a:["training"],x:"'I'd like to see you offering training for that'. 'Confident' is an adjective, so it doesn't fit."}]}]},
+{g:[
+{h:"New city developments (Q11–14)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:11,t:"The idea for the two new developments in the city came from",o:["local people.","the City Council.","the SWRDC."],a:["A"],x:"'the idea for these initiatives came from you, the public'. The Council ran the consultation and the SWRDC paid, which are the traps."},
+{n:12,t:"What is unusual about Brackenside pool?",o:["its architectural style","its heating system","its method of water treatment"],a:["C"],x:"'a recycling system, the only one of its kind in the world, which enables seawater to be used'. The 1930s design is charming, not unusual."},
+{n:13,t:"Local newspapers have raised worries about",o:["the late opening date.","the cost of the project.","the size of the facilities."],a:["C"],x:"The press asked 'whether there would be enough room for the number of visitors'. Date and budget are both said to be on track."},
+{n:14,t:"What decision has not yet been made about the pool?",o:["whose statue will be at the door","the exact opening times","who will open it"],a:["A"],x:"The public will 'decide on the sculpture' and choose the historical figure. Coral White is already chosen to open the pool."}]},
+{h:"Playground areas (Q15–20)",i:"Which feature is related to each area of the world? Choose SIX answers from the box. Tap a feature, then tap a slot, or drag it. Each feature is used once.",k:'d',o:["ancient forts","waterways","ice and snow","jewels","local animals","mountains","music and film","space travel","volcanoes"],it:[
+{n:15,t:"Asia",a:["E"],x:"E, local animals: snakes, orang-utans and tigers, 'fauna native to the forests'."},
+{n:16,t:"Antarctica",a:["F"],x:"F, mountains: climbing blocks 'in the shape of mountains'. An ice rink was rejected, so C is the trap."},
+{n:17,t:"South America",a:["D"],x:"D, jewels: 'mines full of precious stones'."},
+{n:18,t:"North America",a:["H"],x:"H, space travel: 'rockets and the International Space Station'. Cinema and jazz (G) were only considered."},
+{n:19,t:"Europe",a:["A"],x:"A, ancient forts: 'medieval castles and other fortifications'."},
+{n:20,t:"Africa",a:["B"],x:"B, waterways: mosaics and trails 'to represent the great rivers'."}]}]},
+{g:[
+{h:"Thor Heyerdahl: early life (Q21–24)",i:"Choose TWO letters, A–E, for each question.",k:'m',it:[
+{n:21,t:"Which TWO hobbies was Thor Heyerdahl very interested in as a youth?",o:["camping","climbing","collecting","hunting","reading"],a:["B","C"],x:"C: 'his passion for collecting things'. B: Victor corrects camping with 'it was climbing'. Hunting was refused and reading was not a hobby."},
+{n:23,t:"Which TWO reasons did Heyerdahl have for living on an island?",o:["to examine ancient carvings","to experience an isolated place","to formulate a new theory","to learn survival skills","to study the impact of an extreme environment"],a:["B","E"],x:"B: 'a remote location ... cut off by the sea'. E: 'how harsh weather conditions shaped people's lifestyles'. Survival skills were preparation only."}]},
+{h:"The later life of Thor Heyerdahl (Q25–30)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:25,t:"According to Victor and Olivia, academics thought that Polynesian migration from the east was impossible due to",o:["the fact that Eastern countries were far away.","the lack of materials for boat building.","the direction of the winds and currents."],a:["A"],x:"'travel from the east was impossible, because of the huge, empty stretch of ocean'. Winds and currents were Heyerdahl's own research."},
+{n:26,t:"Which do the speakers agree was the main reason for Heyerdahl's raft journey?",o:["to overcome a research setback","to demonstrate a personal quality","to test a new theory"],a:["C"],x:"'simply trying out his idea, to see if migration from the east was possible'. Victor's 'private reasons' idea is dropped."},
+{n:27,t:"What was most important to Heyerdahl about his raft journey?",o:["the fact that he was the first person to do it","the speed of crossing the Pacific","the use of authentic construction methods"],a:["C"],x:"'only ancient techniques and local materials'. Being first: 'I haven't read anywhere that that was his motivation'."},
+{n:28,t:"Why did Heyerdahl go to Easter Island?",o:["to build a stone statue","to sail a reed boat","to learn the local language"],a:["A"],x:"He talked to locals about stone carvings 'and then make one himself'. The reed boat was later, in Egypt."},
+{n:29,t:"In Olivia's opinion, Heyerdahl's greatest influence was on",o:["theories about Polynesian origins.","the development of archaeological methodology.","establishing archaeology as an academic subject."],a:["B"],x:"'the first person to establish ... practical archaeology': recreating the past. His origin theories were discredited."},
+{n:30,t:"Which criticism do the speakers make of William Oliver's textbook?",o:["Its style is out of date.","Its content is over-simplified.","Its methodology is flawed."],a:["A"],x:"'the overall tone somewhat old-fashioned'. The research methods were 'sound'."}]}]},
+{g:[{h:"The future of management (Q31–40)",i:"Complete the notes. Write ONE WORD ONLY for each answer.",k:'g',it:[
+{n:31,t:"Business markets: greater __ among companies",a:["competition"],x:"'a major increase in competition'."},
+{n:32,t:"increase in power of large __ companies",a:["global"],x:"'governments are actually losing power to major global corporations'."},
+{n:33,t:"rising __ in certain countries",a:["demand"],x:"'in the rapidly expanding economies ... demand is growing very fast'."},
+{n:34,t:"External influences: more discussion with __ before making business decisions",a:["customers"],x:"'companies are consulting customers more and more before making their business decisions'."},
+{n:35,t:"environmental concerns which may lead to more __",a:["regulation"],x:"'regulation will need to be strengthened'. Pollution and waste are the reasons, not the answer."},
+{n:36,t:"Business structures: more teams will be formed to work on a particular __",a:["project"],x:"'teams created with a specific project in mind'."},
+{n:37,t:"businesses may need to offer hours that are __, or the chance to work remotely",a:["flexible"],x:"'traditional ones like flexible hours'. Remote working is the second example."},
+{n:38,t:"Management styles: increasing need for managers to provide good __",a:["leadership"],x:"'Above all they'll need great skills in leadership'. Efficiency is what they always needed."},
+{n:39,t:"changes influenced by __ taking senior roles",a:["women"],x:"'caused above all, by more women moving into senior management positions'."},
+{n:40,t:"Changes in the economy: more and more __ workers",a:["self-employed","self employed","selfemployed"],x:"'more and more people are becoming self-employed'."}]}]}
+]},
+3:{parts:[
+{g:[{h:"Early Learning Childcare Centre enrolment form (Q1–10)",i:"Complete the form. Write ONE WORD AND/OR A NUMBER for each answer.",k:'g',ex:"Parent or guardian: Carol <u>Smith</u>",it:[
+{n:1,t:"Child's age: __",a:["4","four"],x:"'I'll put four down because that's how old she'll be when she starts'. She is three now, so don't write 3."},
+{n:2,t:"Address: __ Road, Woodside, 4032",a:["46 wombat"],x:"'46 Wombat Road', with Wombat spelled out. The key needs both the number and the street name."},
+{n:3,t:"Days enrolled for: Monday and __",a:["thursday"],x:"Wednesday is full and Friday has swimming. 'I suppose Thursday would be all right'."},
+{n:4,t:"Start time: __ am",a:["8.30","8:30","8 30","830"],x:"She must be at work by 9:00, so 'I'll drop her off at 8:30'. The 7:30 opening time is the distractor."},
+{n:5,t:"Childcare group: the __ group",a:["red"],x:"'I'll put her in the red group'. Green was described first, so wait for the decision."},
+{n:6,t:"Which meal/s are required each day? __",a:["lunch"],x:"Breakfast and dinner are both refused: 'she'll only need lunch'."},
+{n:7,t:"Medical conditions: needs __",a:["glasses"],x:"Asthma and hearing problems are refused: 'she does need to wear glasses'."},
+{n:8,t:"Emergency contact: Jenny __ Phone: 3346 7523",a:["ball"],x:"Spelled 'B-A-double L'."},
+{n:9,t:"Relationship to child: __",a:["aunt"],x:"Carol says 'my sister', but the relationship to the child is stated by the director: 'she is the child's aunt?'"},
+{n:10,t:"Fees: will pay each __",a:["month"],x:"Term or month: 'Oh, I'll do that then' comes after 'if you pay every month'."}]}]},
+{g:[
+{h:"Dolphin Conservation Trust (Q11–12)",i:"Choose TWO letters, A–E.",k:'m',it:[
+{n:11,t:"Which TWO things does Alice say about the Dolphin Conservation Trust?",o:["Children make up most of the membership.","It's the country's largest conservation organisation.","It helps finance campaigns for changes in fishing practices.","It employs several dolphin experts full-time.","Volunteers help in various ways."],a:["C","E"],x:"C: 'uses its money to support campaigns'. E: 'volunteers working in observation, office work'. A: only 35% are children. B: 'still fairly small'. D: it only 'hopes soon' to employ its first full-time biologist."}]},
+{h:"The Trust and its work (Q13–15)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:13,t:"Why is Alice so pleased the Trust has won the Charity Commission award?",o:["It has brought in extra money.","It made the work of the trust better known.","It has attracted more members."],a:["B"],x:"'made our activities even more widely publicised and understood'. Money is 'not enormous' and members 'may not' rise."},
+{n:14,t:"Alice says oil exploration causes problems to dolphins because of",o:["noise.","oil leaks.","movement of ships."],a:["A"],x:"'exploration creates a lot of underwater noise'. Pollution from oil will be little, and the area has very little shipping."},
+{n:15,t:"Alice became interested in dolphins when",o:["she saw one swimming near her home.","she heard a speaker at her school.","she read a book about them."],a:["C"],x:"'I couldn't put the book down, I was hooked'. She had never seen a dolphin and wasn't interested at school."}]},
+{h:"Adopt a Dolphin (Q16–20)",i:"Which dolphin does Alice make each comment about? Tap a dolphin, then tap a slot, or drag it. A dolphin can be used more than once.",k:'d',re:1,o:["Moondancer","Echo","Kiwi","Samson"],it:[
+{n:16,t:"It has not been seen this year.",a:["B"],x:"B, Echo: 'hasn't yet been sighted by our observers'."},
+{n:17,t:"It is photographed more than the others.",a:["C"],x:"C, Kiwi: 'we've captured her on film hundreds of times'. Samson and Moondancer are only photographed together."},
+{n:18,t:"It is always very energetic.",a:["D"],x:"D, Samson: 'always leaping out of the water with great vigour'. Moondancer is elegant, not energetic."},
+{n:19,t:"It is the newest one in the scheme.",a:["D"],x:"D, Samson: 'the latest of our dolphins to be chosen'. Kiwi is the youngest, which is a different point."},
+{n:20,t:"It has an unusual shape.",a:["A"],x:"A, Moondancer: 'a particularly large fin on her back'. Noise is shared by several dolphins."}]}]},
+{g:[
+{h:"Theatre Studies Course (Q21–25)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:21,t:"What helped Rob to prepare to play the character of a doctor?",o:["the stories his grandfather told him","the times when he watched his grandfather working","the way he imagined his grandfather at work"],a:["C"],x:"'I'd visualise what he must have been like in the past'. His grandfather never says much about his work."},
+{n:22,t:"In the play's first scene, the boredom of village life was suggested by",o:["repetition of words and phrases.","scenery painted in dull colours.","long pauses within conversations."],a:["A"],x:"'people kept saying the same thing over and over'. The long silence came before anyone spoke, and grey and brown are costumes."},
+{n:23,t:"What has Rob learned about himself through working in a group?",o:["He likes to have clear guidelines.","He copes well with stress.","He thinks he is a good leader."],a:["A"],x:"'she helped us work out exactly what to do ... that made me feel better'. This is a paraphrase. He was frustrated, and Sophia was the leader."},
+{n:24,t:"To support the production, research material was used which described",o:["political developments.","changing social attitudes.","economic transformations."],a:["B"],x:"Articles from the 1950s on how relationships were 'shifting'. Politics and the economy aren't mentioned."},
+{n:25,t:"What problem did the students overcome in the final rehearsal?",o:["one person forgetting their words","an equipment failure","the injury of one character"],a:["B"],x:"The spotlight 'stuck ... shining on the wrong side of the stage'. The wheelchair is part of the character."}]},
+{h:"Year abroad (Q26–30)",i:"What action is needed at each stage? Choose FIVE answers from the box. Tap an action, then tap a slot, or drag it. Each action is used once.",k:'d',o:["be on time","get a letter of recommendation","plan for the final year","make sure the institution's focus is relevant","show ability in Theatre Studies","make travel arrangements and bookings","ask for help"],it:[
+{n:26,t:"in the second year of the course",a:["E"],x:"E: 'you have to prove that you know your subject really well'."},
+{n:27,t:"when first choosing where to go",a:["D"],x:"D: a university with emphasis on acting, to fit what she wanted to do after graduating."},
+{n:28,t:"when sending in your choices",a:["A"],x:"A: a friend 'missed the deadline', so 'get a move on'."},
+{n:29,t:"when writing your personal statement",a:["G"],x:"G: 'I'll get some of the final year students to give me some tips'."},
+{n:30,t:"when doing the year abroad",a:["C"],x:"C: 'forgot all about making arrangements for when I came back here for the final year'."}]}]},
+{g:[{h:"Self-regulatory focus theory and leadership (Q31–40)",i:"Complete the notes. Write ONE WORD ONLY for each answer.",k:'g',it:[
+{n:31,t:"Promotion goals focus on __",a:["achievement","achievements"],x:"'Promotion goals in different life situations emphasise achievement'."},
+{n:32,t:"The Chronic Factor comes from one's __",a:["personality","character"],x:"'This factor is connected to a person's personality'."},
+{n:33,t:"The __ Factor",a:["situational"],x:"'there is a situational factor'. The gap comes before 'Factor'."},
+{n:34,t:"we are more likely to focus on promotion goals when with a __",a:["friend"],x:"'spending time with a friend'. The boss is the prevention example."},
+{n:35,t:"Promotion Focus: People think about an ideal version of themselves, their __ and their gains.",a:["aspirations","ambitions"],x:"'their ideal self, their aspirations and gains'."},
+{n:36,t:"Leadership behaviour and __ affects people's focus",a:["style"],x:"'the way leaders behave, or their style of leading'."},
+{n:37,t:"Transformational Leaders pay special attention to the __ of their followers",a:["development"],x:"'focus on their development'."},
+{n:38,t:"passionately communicate a clear __",a:["vision"],x:"'conveys a definitive vision'."},
+{n:39,t:"Transactional Leaders create __ to make expectations clear",a:["structures"],x:"'developing clear structures that tell their followers exactly what is expected'."},
+{n:40,t:"Promotion Focus is good for jobs requiring __",a:["innovation","innovations"],x:"'a lot of innovation is needed, a promotion focus is probably better'. The surgeon is the prevention example."}]}]}
+]},
+4:{parts:[
+{g:[{h:"Thorndyke's Builders (Q1–6)",i:"Complete the notes. Write ONE WORD ONLY for each answer.",k:'g',ex:"Customer heard about Thorndyke's from a <u>friend</u>",it:[
+{n:1,t:"Name: Edith __",a:["pargetter"],x:"Spelled P-A-R-G-E-double T-E-R. The double T is the only spelling trap."},
+{n:2,t:"Address: Flat 4, __ Park Flats",a:["east"],x:"Mr Thorndyke assumes West Park Flats, and Edith corrects him: 'it's East Park'."},
+{n:3,t:"(Behind the __)",a:["library"],x:"'at the back of the library'."},
+{n:4,t:"Best time to contact customer: during the __",a:["morning","mornings"],x:"She is out in the afternoons and evenings, so 'the best time to ring you be in the morning?' Yes."},
+{n:5,t:"Where to park: opposite entrance next to the __",a:["postbox"],x:"'park by the postbox on the other side of the road from the entrance'."},
+{n:6,t:"Needs full quote showing all the jobs and the __",a:["prices"],x:"'I'll list all the jobs separately with individual prices'."}]},
+{h:"Work to be done (Q7–10)",i:"Complete the table. Write ONE WORD ONLY for each answer.",k:'g',it:[
+{n:7,t:"Kitchen: replace the __ in the door (fix tomorrow)",a:["glass"],x:"Edith says 'fixing' and Mr Thorndyke corrects it to 'replacing'. The noun is 'the glass in the door'."},
+{n:8,t:"Kitchen: paint wall above the __",a:["cooker"],x:"'Just the area over the cooker', not all the kitchen walls."},
+{n:9,t:"Strip paint and plaster approximately one __ in advance",a:["week"],x:"'plaster it about a week before I paint it'. 'Tomorrow' belongs to the door repair."},
+{n:10,t:"Garden: one __ needs replacing (end of garden)",a:["fence"],x:"'replace a fence', just one, 'at the far end'."}]}]},
+{g:[
+{h:"Manham Port (Q11–15)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:11,t:"Why did a port originally develop at Manham?",o:["It was safe from enemy attack.","It was convenient for river transport.","It had a good position on the sea coast."],a:["B"],x:"'the highest navigable point of the Avon' and a handy place to load cargo. The sea is over 23 miles away."},
+{n:12,t:"What caused Manham's sudden expansion during the Industrial Revolution?",o:["the improvement in mining techniques","the increase in demand for metals","the discovery of tin in the area"],a:["B"],x:"'a tremendous need for metals of all kinds'. Tin was found 900 years earlier, so it didn't cause the expansion."},
+{n:13,t:"Why did rocks have to be sent away from Manham to be processed?",o:["shortage of fuel","poor transport systems","lack of skills among local people"],a:["A"],x:"'there was not enough coal in the local area' means a fuel shortage."},
+{n:14,t:"What happened when the port declined in the twentieth century?",o:["The workers went away.","Traditional skills were lost.","Buildings were used for new purposes."],a:["A"],x:"'thousands of workers were forced to emigrate out of the area'. The buildings fell into disrepair."},
+{n:15,t:"What did the Manham Trust hope to do?",o:["discover the location of the original port","provide jobs for the unemployed","rebuild the port complex"],a:["C"],x:"Professionals were brought in 'to set about reconstructing it'. Volunteers finding the outlines was an earlier step."}]},
+{h:"Tourist attractions in Manham (Q16–20)",i:"Complete the table. Write NO MORE THAN TWO WORDS for each answer.",k:'g',it:[
+{n:16,t:"Copper mine: specially adapted miners' __ take visitors into the mountain",a:["trains"],x:"'Travel on converted mining trains'."},
+{n:17,t:"Copper mine advice: the mine is __ and enclosed, unsuitable for children and animals",a:["dark"],x:"'ours is very dark and closed in'."},
+{n:18,t:"Village school: classrooms and a special exhibition of __",a:["games"],x:"'take a special look at our display of games'."},
+{n:19,t:"Village school advice: a __ is recommended",a:["guided tour"],x:"'time your visit to coincide with a guided tour'. The gap follows 'a', so 'tour' alone is incomplete."},
+{n:20,t:"'The George': children shouldn't use the __",a:["ladder","ladders"],x:"'take care going down the ladders ... we don't recommend you allow young children to use them'."}]}]},
+{g:[
+{h:"Laura's work placement (Q21–24)",i:"Choose TWO letters, A–E, for each question.",k:'m',it:[
+{n:21,t:"Which TWO skills did Laura improve as a result of her work placement?",o:["communication","design","IT","marketing","organisation"],a:["A","E"],x:"E: managing her time: 'Oh, definitely'. A: 'explaining things and asserting my opinions'. IT 'didn't involve anything I hadn't done before', and a photographer did the artwork."},
+{n:23,t:"Which TWO immediate benefits did the company get from Laura's work placement?",o:["updates for its software","cost savings","an improved image","new clients","a growth in sales"],a:["B","C"],x:"B: an agency 'would have been 250 per cent more'. C: 'enhances the image of the company straight away'. New clients and sales are only expected 'in the long run'."}]},
+{h:"Work placement procedure (Q25–30)",i:"What source of information should Tim use at each stage? Choose SIX answers from the box. Tap a source, then tap a slot, or drag it. Each source is used once.",k:'d',o:["company manager","company's personnel department","personal tutor","psychology department","mentor","university careers officer","internet"],it:[
+{n:25,t:"obtaining booklet",a:["D"],x:"D: 'they've got copies in the psychology department'. Downloading it was Laura's first idea."},
+{n:26,t:"discussing options",a:["F"],x:"F: Tim suggests his tutor, but 'one of the career officers would be better'."},
+{n:27,t:"getting updates",a:["G"],x:"G: 'get updates yourself by checking the website'. The mentor 'is supposed to' help but you can't rely on it."},
+{n:28,t:"responding to invitation for interview",a:["B"],x:"B: the invitation comes from 'personnel departments', and you reply directly to them."},
+{n:29,t:"informing about outcome of interview",a:["E"],x:"E: 'let your mentor know what the outcome is'. Laura confirms."},
+{n:30,t:"requesting a reference",a:["C"],x:"C: 'something you should ask your own tutor to provide'."}]}]},
+{g:[
+{h:"Nanotechnology: technology on a small scale (Q31–33)",i:"Choose the correct letter, A, B or C.",k:'c',it:[
+{n:31,t:"The speaker says that one problem with nanotechnology is that",o:["it could threaten our way of life.","it could be used to spy on people.","it is misunderstood by the public."],a:["C"],x:"'society often gets the wrong idea about its capabilities'. The science-fiction fears are examples of that."},
+{n:32,t:"According to the speaker, some scientists believe that nano-particles",o:["should be restricted to secure environments.","should be used with more caution.","should only be developed for essential products."],a:["B"],x:"'greater care should also be taken with nano-particles'. A withdrawal of products is what 'others' want."},
+{n:33,t:"In the speaker's opinion, research into nanotechnology",o:["has yet to win popular support.","could be seen as unethical.","ought to be continued."],a:["C"],x:"'there's a need to plough ahead with the discoveries and applications'. 'Others' call for a halt."}]},
+{h:"Uses of nanotechnology (Q34–40)",i:"Complete the notes. Write ONE WORD ONLY for each answer.",k:'g',it:[
+{n:34,t:"Transport: nanotechnology could allow the development of stronger __.",a:["metals","metal"],x:"'the production of more durable metals'."},
+{n:35,t:"__ travel will be made available to the masses.",a:["space"],x:"'reduce the cost of travelling into space making it more accessible to ordinary people'."},
+{n:36,t:"Technology: computers will be even smaller, faster, and will have a greater __.",a:["memory"],x:"'a million times more memory'."},
+{n:37,t:"__ energy will become more affordable.",a:["solar"],x:"'The cost of solar cells will be drastically reduced'."},
+{n:38,t:"The environment: pollutants such as __ could be removed from water more easily.",a:["oil"],x:"'remove oil and other contaminants from the water'."},
+{n:39,t:"There will be no __ from manufacturing.",a:["waste"],x:"'you only use what you need and so there wouldn't be any waste'."},
+{n:40,t:"Health and medicine: analysis of medical __ will be speeded up.",a:["tests"],x:"'biosensors ... to analyse tests in minutes rather than days'."}]}]}
+]}};
+
+const A=document.getElementById('app'),$=s=>document.querySelector(s),au=new Audio();
+let run=JSON.parse(localStorage.ielts||'null'),pre=[],cur=-1,key='',view=0,rv=false,timer,own={};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');
+const norm=s=>String(s).toLowerCase().replace(/[£,]/g,'').replace(/[-\s]+/g,' ').trim();
+const fmt=s=>{s=Math.ceil(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const save=()=>localStorage.ielts=JSON.stringify(run);
+const path=(n,p)=>`audio/t${String(n).padStart(2,'0')}_p${p}.mp3`;
+const flat=t=>t.parts.map(P=>P.g.flatMap(g=>g.it.map(i=>({...i,k:g.k}))));
+const B=[[39,9],[37,8.5],[35,8],[32,7.5],[30,7],[26,6.5],[23,6],[18,5.5],[16,5],[13,4.5],[10,4]];
+const band=t=>(B.find(x=>t>=x[0])||[0,'below 4'])[1];
+
+/* audio store */
+const db=new Promise(r=>{try{const q=indexedDB.open('ielts',1);q.onupgradeneeded=()=>q.result.createObjectStore('a');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)}catch(e){r(null)}});
+async function idb(m,k,v){const d=await db;if(!d)return;return new Promise(r=>{const s=d.transaction('a',m=='get'?'readonly':'readwrite').objectStore('a'),q=m=='get'?s.get(k):s.put(v,k);q.onsuccess=()=>r(q.result);q.onerror=()=>r()})}
+const probe=src=>new Promise(r=>{const a=new Audio(),f=v=>{clearTimeout(t);r(v)},t=setTimeout(()=>f(null),6000);a.preload='metadata';a.onloadedmetadata=()=>f(isFinite(a.duration)?a.duration:null);a.onerror=()=>f(null);a.src=src});
+const prep=n=>Promise.all([1,2,3,4].map(async p=>{const b=await idb('get',`t${n}p${p}`);let s=b&&URL.createObjectURL(b),d=s&&await probe(s);if(!d){s=path(n,p);d=await probe(s)}return d?{s,d}:{s:null,d:450}}));
+
+/* screens */
+function home(){clearInterval(timer);let h=`<div class=w><div class=top><h1>IELTS Listening Practice</h1><span><button id=ins style="display:none" onclick="dip.prompt()">Install app</button> <button onclick=mgr()>Audio Manager</button></span></div><p><small>Install as an app: on iPhone tap Share, then Add to Home Screen. On Android or desktop use the Install button or the browser menu.</small></p><div class=grid>`;
+for(let n=1;n<=40;n++){const r=JSON.parse(localStorage['r'+n]||'null');h+=T[n]?`<button class="c on" onclick="intro(${n})"><b>Test ${n}</b><small>${r?r.tot+'/40, last attempt':'Ready'}</small></button>`:`<div class=c><b>Test ${n}</b><small>Coming soon</small></div>`}
+A.innerHTML=h+'</div></div>';if(dip)$('#ins').style.display=''}
+
+async function intro(n){const r=localStorage['r'+n];
+A.innerHTML=`<div class=w><h2>Test ${n}</h2><ul><li>4 parts, 40 questions. Audio plays once and cannot be paused or replayed.</li><li>The clock starts when you tap Start and cannot be stopped. Refreshing does not reset it.</li><li>After Part 4 you get 10 minutes to check your answers, then the test submits automatically.</li><li>Use headphones and stay on this page.</li></ul><p id=st>Checking audio...</p><button id=go disabled>Start exam</button> <button onclick=home() style="background:var(--mu)">Back</button> ${r?`<button onclick=review(${n})>Last review</button>`:''}</div>`;
+pre=await prep(n);$('#st').textContent=pre.map((x,i)=>`Part ${i+1}: ${x.s?(x.s.startsWith('blob')?'audio ready (this browser only)':'audio ready (repo)'):'no audio (silent 7:30 timer)'}`).join(' | ');
+const g=$('#go');g.disabled=false;g.onclick=()=>begin(n);const k=await saved(n);$('#st').insertAdjacentHTML('afterend',`<p><button id=dl>${k==4?'Saved for offline ✔':'Download for offline'}</button></p>`);$('#dl').onclick=()=>dl(n)}
+
+function begin(n){run={n,st:Date.now(),sch:pre.map(x=>x.d),ans:{},left:0};save();
+try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(()=>{})}catch(e){}
+cur=0;au.src=pre[0].s||'';if(pre[0].s)au.play().catch(()=>{});loop()}
+
+async function resume(){A.innerHTML=`<div class=w><h2>Test ${run.n} in progress</h2><p>The clock kept running while you were away. Tap to rejoin.</p><button id=go disabled>Resume</button></div>`;
+pre=await prep(run.n);const g=$('#go');g.disabled=false;g.onclick=()=>{cur=-1;loop()}}
+
+function loop(){own={};flat(T[run.n]).flat().forEach(it=>{if(it.k=='m'){own[it.n]=[it.n,0];own[it.n+1]=[it.n,1]}else own[it.n]=[it.n]});
+A.innerHTML=`<div class=bar><span>Test ${run.n}</span><span id=ph></span><span id=tm></span></div><div class=w id=qs></div><div id=nav></div><div id=ft></div>`;
+key='';view=0;clearInterval(timer);timer=setInterval(tick,500);tick()}
+
+function tick(){const S=run.sch,e=(Date.now()-run.st)/1e3,Z=S[0]+S[1]+S[2]+S[3],L=Z+600-e;
+if(L<=0)return finish();
+let p=0,c=0;while(p<3&&e>=c+S[p])c+=S[p++];
+rv=e>=Z;const P=pre[p]||{},tp=e-c;
+if(rv)au.pause();
+else if(p!==cur){cur=p;au.src=P.s||'';if(P.s)au.onloadedmetadata=()=>{au.currentTime=Math.max(0,e-c);au.play().catch(()=>{})}}
+else if(P.s&&!au.ended){if(au.readyState>1&&Math.abs(au.currentTime-tp)>3)au.currentTime=tp;if(au.paused&&au.readyState>1)au.play().catch(()=>{})}
+const k=rv?'r':'a'+p;
+if(k!=key){key=k;view=rv?0:p;$('#ft').innerHTML=rv?[0,1,2,3].map(i=>`<button onclick="jump(${i*10})">Part ${i+1}</button>`).join('')+'<button onclick=submit() style="background:var(--no)">Submit</button>':'';draw(view);navd()}
+$('#ph').textContent=rv?'Review: check answers':`Part ${p+1} of 4${P.s?'':' (no audio)'}`;
+$('#tm').textContent=fmt(L)}
+
+function draw(i){pick=null;const gs=T[run.n].parts[i].g;
+$('#qs').innerHTML=`<h2>Part ${i+1}</h2>`+gs.map(g=>`<h4>${g.h}</h4><p><i>${g.i}</i></p>${g.k=='d'?box(g):''}${g.ex?`<div class=q><i>Example:</i> ${g.ex}</div>`:''}`+g.it.map(it=>qi(it,g.k)).join('')).join('')+`<div class=pn>${i>0?'<button onclick=go(-1)>Previous</button>':'<span></span>'}${i<3?'<button onclick=go(1)>Next</button>':'<span></span>'}</div>`}
+function go(d){view=Math.max(0,Math.min(3,view+d));draw(view);scrollTo(0,0)}
+
+function qi(it,k){const v=run.ans[it.n];
+if(k=='g')return `<div class=q><b>${it.n}</b> ${it.t.replace('__',`<input data-n=${it.n} value="${esc(v||'')}" autocomplete=off autocapitalize=none autocorrect=off spellcheck=false>`)}</div>`;
+if(k=='d')return `<div class=q><b>${it.n}</b> ${it.t}<span class=slot data-n=${it.n}>${v||'tap to place'}</span></div>`;
+return `<div class=q><b>${k=='m'?it.n+'–'+(it.n+1):it.n}</b> ${it.t}${it.o.map((o,j)=>{const L='ABCDE'[j];return `<label><input type=${k=='m'?'checkbox':'radio'} name=q${it.n} data-n=${it.n} value=${L} ${[].concat(v||[]).includes(L)?'checked':''}> <b>${L}</b> ${o}</label>`}).join('')}</div>`}
+
+let pick=null;
+const box=g=>`<div>${g.o.map((o,j)=>{const L='ABCDEFGHI'[j];return `<span class="chip${!g.re&&g.it.some(i=>run.ans[i.n]===L)?' used':''}" draggable=true data-l=${L}><b>${L}</b> ${o}</span>`}).join('')}</div>`;
+function place(n,l){const g=T[run.n].parts[view].g.find(g=>g.k=='d'&&g.it.some(i=>i.n==n));if(!g||!l)return;
+if(!g.re)g.it.forEach(i=>{if(run.ans[i.n]===l)delete run.ans[i.n]});run.ans[n]=l;save();draw(view);navd()}
+A.addEventListener('click',e=>{if(!run)return;const c=e.target.closest('.chip'),s=e.target.closest('.slot');
+if(c){pick=pick==c.dataset.l?null:c.dataset.l;document.querySelectorAll('.chip').forEach(x=>{x.style.outline=x.dataset.l==pick?'3px solid var(--ac)':''})}
+else if(s){const n=s.dataset.n;if(pick)place(n,pick);else if(run.ans[n]){delete run.ans[n];save();draw(view);navd()}}});
+A.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.chip');if(c)e.dataTransfer.setData('text/plain',c.dataset.l)});
+A.addEventListener('dragover',e=>{if(e.target.closest&&e.target.closest('.slot'))e.preventDefault()});
+A.addEventListener('drop',e=>{const s=e.target.closest&&e.target.closest('.slot');if(s&&run){e.preventDefault();place(s.dataset.n,e.dataTransfer.getData('text/plain'))}});
+const has=x=>{const o=own[x];if(!o)return false;const v=run.ans[o[0]];return o.length>1?!!v&&v.length>o[1]:!!v&&String(v).trim()!==''};
+function navd(){$('#nav').innerHTML=[...Array(40)].map((_,i)=>`<i class="${has(i+1)?'a':''}" onclick="jump(${i})">${i+1}</i>`).join('')}
+function jump(i){view=Math.floor(i/10);draw(view)}
+
+A.addEventListener('input',e=>{const t=e.target,n=t.dataset.n;if(!run||!n)return;
+if(t.type=='checkbox'){const c=[...A.querySelectorAll(`[name=q${n}]:checked`)];if(c.length>2){t.checked=false;return}run.ans[n]=c.map(x=>x.value)}else run.ans[n]=t.value;
+save();navd()});
+addEventListener('beforeunload',e=>{if(run){e.preventDefault();e.returnValue=''}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&run){run.left++;save()}});
+
+function submit(){if(confirm('Submit now? You cannot change answers afterwards.'))finish()}
+function finish(){clearInterval(timer);au.pause();if(!run)return;const n=run.n,r={ans:run.ans,left:run.left,tot:score(n,run.ans).t};
+localStorage['r'+n]=JSON.stringify(r);localStorage.removeItem('ielts');run=null;review(n)}
+
+/* scoring */
+function mark(it,v){if(it.k=='g')return +(v!=null&&it.a.includes(norm(v)));if(it.k=='c'||it.k=='d')return +(v===it.a[0]);return[].concat(v||[]).filter(x=>it.a.includes(x)).length}
+function score(n,ans){const p=flat(T[n]).map(P=>P.reduce((s,it)=>s+mark(it,ans[it.n]),0));return{p,t:p.reduce((a,b)=>a+b,0)}}
+
+/* review / answers and strategies */
+function review(n){const r=JSON.parse(localStorage['r'+n]),s=score(n,r.ans);
+let h=`<div class=w><h2>Test ${n}: ${s.t}/40 (about Band ${band(s.t)})</h2><p>${s.p.map((x,i)=>`Part ${i+1}: ${x}/10`).join(' | ')}</p>`;
+if(r.left)h+=`<p style="color:var(--no)">You left the page ${r.left} time(s) during the test.</p>`;
+flat(T[n]).forEach((P,i)=>{h+=`<h3>Part ${i+1}: ${s.p[i]}/10</h3>`;P.forEach(it=>{const v=r.ans[it.n],m=mark(it,v),mx=it.k=='m'?2:1,y=[].concat(v==null?[]:v).join(', ');
+h+=`<div class="rv ${m==mx?'ok':m?'pt':'no'}"><b>${it.k=='m'?it.n+'–'+(it.n+1):it.n}</b> ${m}/${mx}<br>Your answer: ${y?esc(y):'(blank)'}<br>Correct: <b>${it.a.join(it.k=='m'?' and ':' / ')}</b><p>${it.x}</p></div>`})});
+A.innerHTML=h+'<button onclick=home()>Home</button></div>';scrollTo(0,0)}
+
+/* audio manager */
+async function mgr(n=1){try{navigator.storage.persist()}catch(e){}A.innerHTML=`<div class=w><h2>Audio Manager</h2><p>Uploads are stored in this browser only. For students, commit MP3s to the repo, for example <code>audio/t01_p1.mp3</code> (test 01, part 1). Stored files take priority over repo files.</p><select id=sel onchange="mgr(+this.value)">${[...Array(40)].map((_,i)=>`<option ${i+1==n?'selected':''}>${i+1}</option>`).join('')}</select><div id=rows></div><button onclick=home()>Back</button></div>`;
+let r='';for(let p=1;p<=4;p++){const b=await idb('get',`t${n}p${p}`);r+=`<p><b>Part ${p}</b>: ${b?'stored, '+(b.size/1e6).toFixed(1)+' MB':'nothing stored'}<br><small>Repo path: ${path(n,p)}</small><br><input type=file accept="audio/*" onchange="up(${n},${p},this.files[0])"></p>`}
+$('#rows').innerHTML=r}
+async function up(n,p,f){if(f){await idb('put',`t${n}p${p}`,f);mgr(n)}}
+
+/* offline + install */
+let dip=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;const b=$('#ins');if(b)b.style.display=''});
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+const aurl=(n,p)=>new URL(path(n,p),location.href).href;
+async function saved(n){try{const c=await caches.open('ielts-audio');let k=0;for(let p=1;p<=4;p++)if(await c.match(aurl(n,p)))k++;return k}catch(e){return 0}}
+async function dl(n){const b=$('#dl');b.disabled=true;try{try{navigator.storage.persist()}catch(e){}const c=await caches.open('ielts-audio');
+for(let p=1;p<=4;p++){b.textContent=`Downloading part ${p} of 4...`;const u=aurl(n,p);if(await c.match(u))continue;const r=await fetch(u);if(!r.ok)throw 0;await c.put(u,r)}
+b.textContent='Saved for offline ✔'}catch(e){b.textContent='Download failed. Tap to retry';b.disabled=false}}
+run?resume():home();
+</script></body></html>
